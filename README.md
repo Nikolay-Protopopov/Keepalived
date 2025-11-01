@@ -1,4 +1,4 @@
-# Домашнее задание к занятию «Система мониторинга Zabbix. Часть 2» - Протопопов Николай Андреевич
+# Домашнее задание к занятию 1 «Disaster recovery и Keepalived»- Протопопов Николай Андреевич
 
 
 ### Инструкция по выполнению домашнего задания
@@ -32,8 +32,64 @@
 7. git push origin main
 
 ### Задание 1
-Создайте свой шаблон, в котором будут элементы данных, мониторящие загрузку CPU и RAM хоста.
-![Task1](screenshots/Lesson1.png)
+Дана схема для Cisco Packet Tracer, рассматриваемая в лекции.
+На данной схеме уже настроено отслеживание интерфейсов маршрутизаторов Gi0/1 (для нулевой группы)
+Необходимо аналогично настроить отслеживание состояния интерфейсов Gi0/0 (для первой группы).
+Для проверки корректности настройки, разорвите один из кабелей между одним из маршрутизаторов и Switch0 и запустите ping между PC0 и Server0.
+На проверку отправьте получившуюся схему в формате pkt и скриншот, где виден процесс настройки маршрутизатора.
+
+### router 1
+```enable
+configure terminal
+
+! Настройка интерфейса Gi0/0
+interface GigabitEthernet0/0
+ ip address 192.168.0.3 255.255.255.0
+ standby 0 ip 192.168.0.1
+ standby 0 priority 100
+ standby 0 preempt
+ standby 0 name GROUP_0
+ no shutdown
+
+! Настройка интерфейса Gi0/1
+interface GigabitEthernet0/1
+ ip address 192.168.1.3 255.255.255.0
+ standby 1 ip 192.168.1.1
+ standby 1 priority 100
+ standby 1 preempt
+ standby 1 name GROUP_1
+ no shutdown
+
+end
+write memory
+```
+### router 0
+```
+enable
+configure terminal
+
+! Настройка интерфейса Gi0/0
+interface GigabitEthernet0/0
+ ip address 192.168.0.2 255.255.255.0
+ standby 0 ip 192.168.0.1
+ standby 0 priority 105
+ standby 0 preempt
+ standby 0 name GROUP_0
+ no shutdown
+
+! Настройка интерфейса Gi0/1
+interface GigabitEthernet0/1
+ ip address 192.168.1.2 255.255.255.0
+ standby 1 ip 192.168.1.1
+ standby 1 priority 105
+ standby 1 preempt
+ standby 1 name GROUP_1
+ no shutdown
+
+end
+write memory
+```
+![Task1](screenshots/cpt.png)
 ### Задание 2
 Добавьте в Zabbix два хоста и задайте им имена <фамилия и инициалы-1> и <фамилия и инициалы-2>. Например: ivanovii-1 и ivanovii-2.
 
