@@ -109,7 +109,7 @@ write memory
 
 [Конфигурация](Lesson3Keepalive.conf)
 [Скрипт искуственной нагрузки](loadgenerator.sh)
-## Скрипт проверки статуса сервера
+## Скрипт проверки нагрузки на сервер
 ``` 
 #!/bin/bash
 LOAD=$(awk '{print $1}' /proc/loadavg)
