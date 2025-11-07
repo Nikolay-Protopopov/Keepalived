@@ -107,4 +107,14 @@ write memory
 ![Availabity](screenshots/backup.png)
 ![Availabity](screenshots/master.png)
 
-![Availabity](Lesson3Keepalive.conf)
+[Конфигурация](Lesson3Keepalive.conf)
+[Скрипт искуственной нагрузки](loadgenerator.sh)
+## Скрипт проверки статуса сервера
+``` 
+#!/bin/bash
+LOAD=$(awk '{print $1}' /proc/loadavg)
+if (( $(echo "$LOAD > 1.5" | bc -l) )); then
+    exit 1
+else
+    exit 0
+fi
